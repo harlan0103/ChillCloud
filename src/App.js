@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import Navbar from 'react-bootstrap/lib/Navbar';
+import Row from 'react-bootstrap/lib/Row';
+import Grid from 'react-bootstrap/lib/Grid';
+
 // Import needed component
 import LoginForm from './Component/LoginForm';
 import MainPanel from './Component/MainPanel';
@@ -13,20 +17,10 @@ class App extends Component {
     super(props);
 
     this.state = {
-      login: true
+      login: false
     }
-
-    // We bind the switch button and the App component
-    this.switchOnClick = this.switchOnClick.bind(this);
   }
 
-  // We have a switch button to switch content
-  // By click this button will change the this.state.login value
-  switchOnClick() {
-    this.setState({
-      login: !this.state.login
-    })
-  }
  
   render() {
     // Create a variable named content
@@ -39,11 +33,20 @@ class App extends Component {
       content = <LoginForm />;
     }
 
+    // Add a global navigation bar
     return (
-      <div>
-        <button onClick={this.switchOnClick}>switch</button>
-        {content}
-      </div>
+      <Grid>
+        <Row>
+          <Navbar>
+            <Navbar.Header>
+              <Navbar.Brand>
+                <a id="nav_name" href="/">ChillFatty Cloud</a>
+              </Navbar.Brand>
+            </Navbar.Header>
+          </Navbar>
+          {content}
+        </Row>
+      </Grid>
     );
   }
 
