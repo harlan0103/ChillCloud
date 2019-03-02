@@ -1,8 +1,7 @@
 // Import from bootstrap
 import Col from 'react-bootstrap/lib/Col';
-import FormGroup from 'react-bootstrap/lib/FormGroup';
-import FormControl from 'react-bootstrap/lib/FormControl';
-
+import Alert from 'react-bootstrap/lib/Alert';
+import Api from '../Logic/Api';
 import React, { Component } from 'react';
 import './LoginForm.css';
 
@@ -11,28 +10,67 @@ class LoginForm extends Component {
     constructor(props){
         super(props);
 
+        this.state = {
+            error: false
+            
+        }
+
         // Connect handle with loginForm component
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    // This is the click respinse function of login form
+    /**
+     * Function call api login function using email and password as params
+     * Then get the response from api
+     * If email and pwd are correct then set login success response
+     * @param {*} e 
+     */
     handleSubmit(e){
-
-        // preventDefault() 方法组织浏览器进行默认的关联动作
+        // preventDefault() prevent the default action of browser
         e.preventDefault();
+        const email = this.email;
+        const password = this.password;
+
+        Api.login(email, password).then(response => {
+            if(!response.ok){
+                // Login fail set login state as false
+                this.setState({ error: true });
+                return;
+            }
+            // Login successful
+            response.json().then(data => this.props.onLogin(data));
+        });
     }
 
-
+    /**
+     * First check if login state is error
+     * If error, set alert message
+     * 
+     */
     render() {
+        var alert;
+        // If login failed
+        if (this.state.error){
+            alert = (
+                <Alert bsStyle='danger'>
+                    <strong>Error: </strong> Wrong email or password
+                </Alert>
+            );
+        }
+        else{
+            alert = <span></span>
+        }
+
         return (
             <Col md={4} mdOffset={4}>
                 <h3>Login</h3>
+                {alert}
                 <form id="loginForm" onSubmit={this.handleSubmit}>
                     <div class="form-group">
-                        <input class="form-control" type="text" placeholder="Email" />
+                        <input class="form-control" type="text" placeholder="Email" onChange={evt => this.email = evt.target.value} />
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="password" placeholder="password" />
+                        <input class="form-control" type="password" placeholder="password" onChange={evt => this.password = evt.target.value}/>
                     </div>
                     <div class="form-group">
                         <input class="btn btn-primary" id="loginBtn" type="submit" value="Login" />

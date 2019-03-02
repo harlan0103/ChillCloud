@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Cookies from 'js-cookie';
+import Api from './Logic/Api';
+
 import './App.css';
 
 import Navbar from 'react-bootstrap/lib/Navbar';
@@ -19,8 +21,27 @@ class App extends Component {
     this.state = {
       login: false
     }
+
+    this.onLogin = this.onLogin.bind(this);
   }
 
+  componentDidMount() {
+    // Get token from cookie
+    var token = Cookies.get('token');
+    if(token){
+      Api.auth(token).then(response => {
+        if(response.ok){
+          this.setState({ login: true, });
+        }
+      });
+    }
+  }
+
+  onLogin(data){
+    console.log(data)
+    Cookies.set('token', data.token, { expires: 7 });
+    this.setState({ login: true, });
+  }
  
   render() {
     // Create a variable named content
@@ -30,7 +51,7 @@ class App extends Component {
       content = <MainPanel title="Main Panel"/>;
     }
     else {
-      content = <LoginForm />;
+      content = <LoginForm onLogin = {this.onLogin}/>;
     }
 
     // Add a global navigation bar

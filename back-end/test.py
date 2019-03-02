@@ -11,6 +11,7 @@ class CloudDiskTestCase(unittest.TestCase):
         app.testing = True
         self.client = app.test_client()
 
+    # Current test for index '/' is return 'message' = 'ok'
     def test_index(self):
         rv = self.client.get('/', headers={'content-type': 'application/json'})
         data = json.loads(rv.data.decode('utf-8'))
