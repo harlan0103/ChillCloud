@@ -11,8 +11,7 @@ class LoginForm extends Component {
         super(props);
 
         this.state = {
-            error: false
-            
+            error: false          
         }
 
         // Connect handle with loginForm component

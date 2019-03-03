@@ -1,6 +1,9 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from functools import wraps
+from model import Folder
+import peewee
+from playhouse.shortcuts import model_to_dict, dict_to_model
 # Import itsdangerous package to create salted token
 from itsdangerous import (TimedJSONWebSignatureSerializer as URLSafeSerializer, BadSignature, SignatureExpired)
 
@@ -70,6 +73,51 @@ def index():
 @authorization_required
 def auth():
     return jsonify(message='ok')
+
+# This function calls the url/folders with get and post method
+# POST method will create a new table with name as request parameter name
+# GET method will return all folders as json format
+@app.route('/folders', methods = ['GET','POST'])
+# TODO @authorization_required
+def folders():
+    if request.method == 'POST':
+        req = request.get_json()
+        try:
+            f = Folder.create(name = req['name'])
+            f.save()
+            return jsonify(message = 'ok'), 201
+        except peewee.IntegrityError as e:
+            return jsonify(message = 'error'), 409
+    
+    if request.method == 'GET':
+        query = Folder.select()
+        if(query.exists()):
+            return jsonify(message = 'ok', data = [model_to_dict(folder) for folder in query])
+        else:
+            return jsonify(message = 'ok', data = [])
+
+# This function takes folder_name as paramter of URL/folders/
+# The function will first check if database has the selected table name
+# GET method will return the instance of the table
+# DELETE method will delete the instance of the table
+@app.route('/folders/<folder_name>', methods = ['GET', 'DELETE'])
+# TODO: @authorization_required
+def folder(folder_name):
+    try:
+        folder = Folder.get(Folder.name == folder_name)
+    except peewee.DoesNotExist:
+        return jsonify(message = 'error'), 404
+
+    if request.method == 'GET':
+        return jsonify(message = 'ok', data = model_to_dict(folder))
+
+    if request.method == 'DELETE':
+        try:
+            folder.delete_instance()
+        except peewee.IntegrityError:
+            return jsonify(message = 'error'), 409
+    
+    return jsonify(message = 'ok')
 
 
 if __name__ == '__main__':

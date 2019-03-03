@@ -31,6 +31,44 @@ const Api = {
                 'Content-Type': 'application/json'
             },
         });
+    },
+
+    getFolders() {
+        return fetch(this.BASE_API + "/folders", {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            },
+        });
+    },
+
+    addFolders(name) {
+        return fetch(this.BASE_API + "/folders", {
+            method: 'POST',
+            body: JSON.stringify({name : name}),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        });
+    },
+
+    getFolder(name) {
+        return fetch(this.BASE_API + "/folders/" + name, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            },
+        });
+    },
+
+    deleteFolder(name) {
+        return fetch(this.BASE_API + "/folders/" + name, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json'
+            },
+        });
     }
 }
 
