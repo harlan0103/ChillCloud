@@ -33,6 +33,10 @@ const Api = {
         });
     },
 
+    /**
+     * This will call URL/folders using GET method
+     * Will return all folders stored in the database
+     */
     getFolders() {
         return fetch(this.BASE_API + "/folders", {
             method: 'GET',
@@ -42,6 +46,11 @@ const Api = {
         });
     },
 
+    /**
+     * This function calls URL/folders with a parameter name
+     * Will add a new table attribute to the database
+     * @param {*} name new folder name
+     */
     addFolders(name) {
         return fetch(this.BASE_API + "/folders", {
             method: 'POST',
@@ -53,6 +62,10 @@ const Api = {
         });
     },
 
+    /**
+     * This function will ask for returning a content of folder with specific name
+     * @param {*} name 
+     */
     getFolder(name) {
         return fetch(this.BASE_API + "/folders/" + name, {
             method: 'GET',
@@ -62,6 +75,10 @@ const Api = {
         });
     },
 
+    /**
+     * This function will delete a folder with parameter name
+     * @param {*} name 
+     */
     deleteFolder(name) {
         return fetch(this.BASE_API + "/folders/" + name, {
             method: 'DELETE',
