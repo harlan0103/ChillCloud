@@ -86,7 +86,33 @@ const Api = {
                 'Accept': 'application/json'
             },
         });
+    },
+
+    uploadFile(folder, file) {
+        var data = new FormData();
+        data.append('file', file);
+        return fetch(this.BASE_API + "/folders/" + folder, {
+            method: 'POST',
+            body: data,
+            headers: {
+                Accept: 'application/json',
+            },
+        });
+    },
+
+    deleteFile(folder, filename) {
+        return fetch(this.BASE_API + "/folders/" + folder + "/" + filename, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+            },
+        });
+    },
+
+    generateFileDownloadUrl(folder, filename) {
+        return this.BASE_API + "/folders/" + folder + "/" + filename;
     }
+
 }
 
 export default Api;
